@@ -5,6 +5,7 @@ pipeline{
         DOCKER_IMAGE_NAME = "my-app"
         DOCKER_TAG = "V.${BUILD_NUMBER}"
         IMAGE_URL = "${DOCKERHUB_USERNAME}/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+    
     }
     stages{
         stage('imageBuild'){
@@ -31,21 +32,23 @@ pipeline{
             }
         }        
     }
-    post{
+    post {
         success{
-            echo 'Docker Image Built and Pushed '
-            echo 'Triggering CD pipeline '
+            echo 'Docker Image Built and Pushed'
+            build job: 'docker-deploy',
+                parameters: [
+                    string (name: 'IMAGE_URL', value: "$IMAGE_URL")
+                ]
 
         }
         failure{
-            echo 'Something went wrong'
+            echo 'Something went wrong!!!'
         }
         cleanup{
             cleanWs()
         }
     }
 }
-
 
 
 
