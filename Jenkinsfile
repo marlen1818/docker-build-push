@@ -17,6 +17,7 @@ pipeline{
                 script{
                     withCredentials([usernamePassword(credentialsId: 'docker-login', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                         sh "echo $PASS | docker login -u ${USER} --password-stdin"
+                        
                         // some block
                         sh "docker push ${IMAGE_URL}"
                     }
